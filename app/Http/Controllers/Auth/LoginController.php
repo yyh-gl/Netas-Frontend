@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
@@ -27,7 +27,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/login/github/callback';
+    protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -40,13 +40,22 @@ class LoginController extends Controller
     }
 
     /**
-     * ログイントップ画面
+     * ログイン画面を表示
      *
      * @return \Illuminate\Http\Response
      */
-    public function login()
+    public function showLoginForm()
     {
         return view('auth.login');
+    }
+
+    /**
+     * ログイン処理
+     *
+     */
+    public function login()
+    {
+        //
     }
 
     /**
@@ -67,10 +76,7 @@ class LoginController extends Controller
     public function handleProviderCallback()
     {
         $user = Socialite::driver('github')->user();
-        // $user->token;
-        // $user->nickname;
-        // $user->name;
-        // $user->avatar;
-        return view('pages.home');
+        User::saveGithubUser($user);
+        return view('pages.home', ['userName' => $user->name]);
     }
 }

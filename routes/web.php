@@ -15,6 +15,8 @@ Route::get('/', function () {
     return view('pages.welcome');
 });
 
-Route::get('login', 'Auth\LoginController@login')->name('login');
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('login', 'Auth\LoginController@login');
 Route::get('login/github', 'Auth\LoginController@redirectToProvider');
 Route::get('login/github/callback', 'Auth\LoginController@handleProviderCallback');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');

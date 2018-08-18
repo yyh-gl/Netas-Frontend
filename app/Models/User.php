@@ -34,8 +34,10 @@ class User extends Authenticatable
      * @param string $name
      * @param string $email
      * @param string $avatar
+     * @param string $password
+     * @return User
      */
-    public static function store(string $user_id, string $name, string $email, string $avatar, string $password = '')
+    public static function store(string $user_id, string $name, string $email, string $avatar, string $password) : User
     {
         $user = new User();
         $user->user_id = $user_id;
@@ -44,15 +46,17 @@ class User extends Authenticatable
         $user->avatar = $avatar;
         $user->password = $password;
         $user->save();
+        return $user;
     }
 
     /**
      * Github経由ログインユーザを保存
      *
      * @param array $user
+     * @return User
      */
-    public static function saveGithubUser(array $user)
+    public static function saveGithubUser(array $user) : User
     {
-        static::store($user->user_id, $user->name, $user->email, $user->avatar, $user->password);
+        return static::store($user->user_id, $user->name, $user->email, $user->avatar, $user->password);
     }
 }

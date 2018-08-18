@@ -45,4 +45,14 @@ class User extends Authenticatable
         $user->password = $password;
         $user->save();
     }
+
+    /**
+     * Github経由ログインユーザを保存
+     *
+     * @param array $user
+     */
+    public static function saveGithubUser(array $user)
+    {
+        static::store($user->user_id, $user->name, $user->email, $user->avatar, $user->password);
+    }
 }

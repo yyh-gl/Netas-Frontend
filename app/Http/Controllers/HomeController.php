@@ -2,13 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\RequestHelper;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function home() {
-        $users = RequestHelper::sendGetRequest(config('const_api.REQUEST_GET_ALL_USERS'));
-        return view('pages.home', ['users' => $users]);
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return view('pages.home');
     }
 }

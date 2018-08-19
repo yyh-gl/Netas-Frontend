@@ -72,11 +72,14 @@ class LoginController extends Controller
      * GitHubからユーザー情報を取得
      *
      * @return \Illuminate\Http\Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function handleProviderCallback()
     {
         $user = Socialite::driver('github')->user();
-        User::saveGithubUser($user);
-        return view('pages.home', ['userName' => $user->name]);
+        if (User::isNull($user->nickname)) {
+            User::saveGithubUser($user);
+        }
+        return view('pages.home', ['user' => $user]);
     }
 }

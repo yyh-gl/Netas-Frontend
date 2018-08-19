@@ -10,17 +10,20 @@ class RequestHelper {
      * 【GET】Guzzle経由のHTTPリクエスト
      *
      * @param string $path
-     * @return \Illuminate\Http\Response
+     * @param array $query
+     * @return array
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public static function sendGetRequest(string $path) : string
+    public static function sendGetRequest(string $path, array $query = []) : array
     {
         $client = new \GuzzleHttp\Client();
 
-        $requestUrl = config('const_api.BASE_URL') . $path;
+        $requestUrl = static::createRequestUrl($path);
 
-        $response = $client->request('GET', $requestUrl);
-        $responseBody = (string) $response->getBody();
+        $response = $client->request('GET', $requestUrl, [
+            'query' => $query,
+        ]);
+        $responseBody = json_decode($response->getBody(), true);
         return $responseBody;
     }
 
@@ -29,21 +32,30 @@ class RequestHelper {
      *
      * @param string $path
      * @param array $params
-     * @return \Illuminate\Http\Response
+     * @return array
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public static function sendPostRequest(string $path, array $params) : string
+    public static function sendPostRequest(string $path, array $params = []) : array
     {
-        $client = new \GuzzleHttp\Client(
-            [\GuzzleHttp\RequestOptions::VERIFY => false]
-        );
+        $client = new \GuzzleHttp\Client();
 
-        $requestUrl = config('const_api.BASE_URL') . $path;
-        $response = $client->request('POST', $requestUrl,
-            [
-                'form_params' => $params
-            ]);
-        $responseBody = (string) $response->getBody();
+        $requestUrl = static::createRequestUrl($path);
+
+        $response = $client->request('POST', $requestUrl, [
+            'form_params' => $params,
+        ]);
+        $responseBody = json_decode($response->getBody(), true);
         return $responseBody;
+    }
+
+    /**
+     * リクエストURLを生成
+     *
+     * @param string $path
+     * @return \Illuminate\Http\Response
+     */
+    private static function createRequestUrl(string $path) : string
+    {
+        return config('const_api.BASE_URL') . $path;
     }
 }

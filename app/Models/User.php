@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'user_id', 'name', 'email', 'avatar', 'introduction'
+        'user_id', 'name', 'email', 'avatar', 'introduction', 'password',
     ];
 
     /**
@@ -43,16 +43,8 @@ class User extends Authenticatable
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public static function store(string $user_id, string $name, string $email,
-                                 string $avatar, string $introduction = '', string $password = '') : array
+                                 string $avatar, string $introduction, string $password) : array
     {
-        if (empty($introduction)) {
-            $introduction = config('const.DEFAULT_INTRODUCTION');
-        }
-
-        if (empty($password)) {
-            $password = config('const.DEFAULT_PASSWORD');
-        }
-
         $params = [
             'user_id'      => $user_id,
             'name'         => $name,
@@ -67,6 +59,25 @@ class User extends Authenticatable
     }
 
     /**
+     * ユーザを保存
+     *
+     * @param array $user
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public static function saveUser(array $user) : array
+    {
+        return static::store(
+            $user['userId'],
+            $user['name'],
+            $user['email'],
+            config('const.DEFAULT_AVATAR'),
+            config('const.INTRODUCTION'),
+            $user['password']
+        );
+    }
+
+    /**
      * Github経由ログインユーザを保存
      *
      * @param SocialUser $user
@@ -75,7 +86,14 @@ class User extends Authenticatable
      */
     public static function saveGithubUser(SocialUser $user) : array
     {
-        return static::store($user->nickname, $user->name, $user->email, $user->avatar);
+        return static::store(
+            $user->nickname,
+            $user->name,
+            $user->email,
+            $user->avatar,
+            config('const.INTRODUCTION'),
+            config('const.PASSWORD')
+        );
     }
 
     /**

@@ -117,7 +117,7 @@ class User extends Authenticatable
      * @return User
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public static function fetchUser(string $userId) : User
+    public static function fetchUser(string $userId) : array
     {
         $response = RequestHelper::sendGetRequest(config('const_api.REQUEST_GET_USER') . $userId);
         return ($response['user']);

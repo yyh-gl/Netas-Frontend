@@ -84,11 +84,11 @@ class LoginController extends Controller
             $user = User::saveGithubUser($socialUser);
         }
 
-//        $this->currentUser['user_id'] = $user->nickname;
-//        $this->currentUser['name'] = $user->name;
-//        $this->currentUser['email'] = $user->email;
-//        $this->currentUser['avatar'] = $user->avatar;
-//        $this->currentUser['introduction'] = $user->introduction;
+        $this->currentUser['user_id'] = $user['user_id'];
+        $this->currentUser['name'] = $user['name'];
+        $this->currentUser['email'] = $user['email'];
+        $this->currentUser['avatar'] = $user['avatar'];
+        $this->currentUser['introduction'] = $user['introduction'];
 
         return view('pages.home', ['user' => $this->currentUser]);
     }

@@ -10,4 +10,18 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    protected $currentUser = [
+        'user_id'      => null,
+        'name'         => null,
+        'email'        => null,
+        'avatar'       => null,
+        'introduction' => null,
+        'password'     => null,
+        'client'       => [
+            'id'     => null,
+            'secret' => null,
+        ],
+    ];
+
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
@@ -76,10 +77,19 @@ class LoginController extends Controller
      */
     public function handleProviderCallback()
     {
-        $user = Socialite::driver('github')->user();
-        if (User::isNull($user->nickname)) {
-            User::saveGithubUser($user);
+        $socialUser = Socialite::driver('github')->user();
+
+        $user = User::fetchUser($socialUser->nickname);
+        if (is_null($user)) {
+            $user = User::saveGithubUser($socialUser);
         }
-        return view('pages.home', ['user' => $user]);
+
+//        $this->currentUser['user_id'] = $user->nickname;
+//        $this->currentUser['name'] = $user->name;
+//        $this->currentUser['email'] = $user->email;
+//        $this->currentUser['avatar'] = $user->avatar;
+//        $this->currentUser['introduction'] = $user->introduction;
+
+        return view('pages.home', ['user' => $this->currentUser]);
     }
 }

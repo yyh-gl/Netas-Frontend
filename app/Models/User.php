@@ -54,7 +54,7 @@ class User extends Authenticatable
             'password'     => $password,
         ];
 
-        $user = RequestHelper::sendPostRequest(config('const_api.REQUEST_SAVE_USER'), $params);
+        $user = RequestHelper::sendPostRequest(config('const_api.REQUEST_SAVE_USER'), [], $params);
         return $user;
     }
 
@@ -72,7 +72,7 @@ class User extends Authenticatable
             $user['name'],
             $user['email'],
             config('const.DEFAULT_AVATAR'),
-            config('const.INTRODUCTION'),
+            config('const.DEFAULT_INTRODUCTION'),
             $user['password']
         );
     }
@@ -86,13 +86,14 @@ class User extends Authenticatable
      */
     public static function saveGithubUser(SocialUser $user) : array
     {
+        // TODO: パスワードのあり方を考え直す
         return static::store(
             $user->nickname,
             $user->name,
             $user->email,
             $user->avatar,
-            config('const.INTRODUCTION'),
-            config('const.PASSWORD')
+            config('const.DEFAULT_INTRODUCTION'),
+            config('const.DEFAULT_PASSWORD')
         );
     }
 
@@ -107,5 +108,18 @@ class User extends Authenticatable
     {
         $response = RequestHelper::sendGetRequest(config('const_api.REQUEST_GET_USER') . $userId);
         return is_null($response['user']);
+    }
+
+    /**
+     * ユーザIDからユーザを取得
+     *
+     * @param string $userId
+     * @return User
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public static function fetchUser(string $userId) : User
+    {
+        $response = RequestHelper::sendGetRequest(config('const_api.REQUEST_GET_USER') . $userId);
+        return ($response['user']);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -58,20 +59,21 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array $data
+     * @param Request $request
      * @return array
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function create(array $data)
+    protected function register(Request $request)
     {
         $user = [
-            'userId' => $data['userId'],
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'userId'       => $request['userId'],
+            'name'         => $request['name'],
+            'email'        => $request['email'],
+            'avatar'       => $request['avatar'],
+            'introduction' => $request['introduction'],
+            'password'     => Hash::make($request['password']),
         ];
 
         return User::saveUser($user);
-        // TODO: APIでのログイン方法を探す
     }
 }

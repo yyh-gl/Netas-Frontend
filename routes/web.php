@@ -19,6 +19,7 @@ Route::get('/', function () {
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::post('register', 'Auth\RegisterController@register');
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('login', 'Auth\LoginController@login');
 Route::get('login/github', 'Auth\LoginController@redirectToProvider');
